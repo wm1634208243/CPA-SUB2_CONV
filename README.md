@@ -2,6 +2,8 @@
 
 A lightweight Go web app for converting account JSON between CPA (`codex`) and Sub2API formats.
 
+Online demo: [conv.wangmin.xyz](https://conv.wangmin.xyz)
+
 ## Highlights
 
 - Convert `CPA -> Sub2API`
