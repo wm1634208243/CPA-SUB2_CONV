@@ -40,6 +40,35 @@ Run:
 
 Open [http://localhost:8080](http://localhost:8080).
 
+## Docker Compose
+
+Build and start:
+
+```bash
+docker compose up --build -d
+```
+
+Open [http://localhost:8080](http://localhost:8080).
+
+Stop:
+
+```bash
+docker compose down
+```
+
+Use a different host port:
+
+```bash
+PORT=9090 docker compose up --build -d
+```
+
+Windows PowerShell:
+
+```powershell
+$env:PORT="9090"
+docker compose up --build -d
+```
+
 ### Windows PowerShell
 
 If you want the Go build cache to stay inside the project directory:
