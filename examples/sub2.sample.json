@@ -1,0 +1,31 @@
+{
+  "exported_at": "2026-05-14T00:00:00Z",
+  "proxies": [],
+  "accounts": [
+    {
+      "name": "demo@example.com",
+      "platform": "openai",
+      "type": "oauth",
+      "credentials": {
+        "_token_version": 1747180800000,
+        "access_token": "header.payload.signature",
+        "chatgpt_account_id": "acct_demo",
+        "chatgpt_user_id": "user_demo",
+        "client_id": "app_EMoamEEZ73f0CkXaXp7hrann",
+        "email": "demo@example.com",
+        "expires_at": "2026-12-31T00:00:00Z",
+        "id_token": "header.payload.signature",
+        "plan_type": "plus",
+        "refresh_token": "refresh_demo"
+      },
+      "extra": {
+        "email": "demo@example.com",
+        "privacy_mode": "training_off"
+      },
+      "concurrency": 10,
+      "priority": 1,
+      "rate_multiplier": 1,
+      "auto_pause_on_expired": true
+    }
+  ]
+}

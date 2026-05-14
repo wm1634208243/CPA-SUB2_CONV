@@ -1,0 +1,10 @@
+.gocache/
+.idea/
+
+converter_server
+*.exe
+*.test
+*.out
+
+.DS_Store
+Thumbs.db

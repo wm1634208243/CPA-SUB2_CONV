@@ -1,0 +1,10 @@
+{
+  "type": "codex",
+  "email": "demo@example.com",
+  "expired": "2026-12-31T00:00:00Z",
+  "id_token": "header.payload.signature",
+  "account_id": "acct_demo",
+  "access_token": "header.payload.signature",
+  "last_refresh": "2026-05-14T00:00:00Z",
+  "refresh_token": "refresh_demo"
+}
