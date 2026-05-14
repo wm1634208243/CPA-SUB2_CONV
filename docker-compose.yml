@@ -1,11 +1,9 @@
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/wm1634208243/cpa-sub2-conv:latest
     container_name: cpa-sub2-conv
     ports:
-      - "8080:8080"
+      - "${HOST_PORT:-8080}:8080"
     environment:
       PORT: 8080
     restart: unless-stopped

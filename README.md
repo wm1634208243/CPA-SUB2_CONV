@@ -42,10 +42,10 @@ Open [http://localhost:8080](http://localhost:8080).
 
 ## Docker Compose
 
-Build and start:
+Direct pull and start:
 
 ```bash
-docker compose up --build -d
+docker compose up -d
 ```
 
 Open [http://localhost:8080](http://localhost:8080).
@@ -59,14 +59,36 @@ docker compose down
 Use a different host port:
 
 ```bash
-PORT=9090 docker compose up --build -d
+HOST_PORT=9090 docker compose up -d
 ```
 
 Windows PowerShell:
 
 ```powershell
-$env:PORT="9090"
-docker compose up --build -d
+$env:HOST_PORT="9090"
+docker compose up -d
+```
+
+The default Compose file pulls the published image from GitHub Container Registry:
+
+```text
+ghcr.io/wm1634208243/cpa-sub2-conv:latest
+```
+
+If you want to build locally from source instead, run:
+
+```bash
+docker build -t cpa-sub2-conv .
+docker run --rm -p 8080:8080 cpa-sub2-conv
+```
+
+The repository also includes a GitHub Actions workflow at [docker-publish.yml](/D:/project/CPA-SUB2_CONV/.github/workflows/docker-publish.yml) that publishes the image automatically when code is pushed to the `main` branch or when a `v*` tag is pushed.
+After the first successful workflow run, users can clone the repo or just download the [docker-compose.yml](/D:/project/CPA-SUB2_CONV/docker-compose.yml) file and start the container directly.
+
+If the package is still private on GitHub, users must authenticate to `ghcr.io` before pulling:
+
+```bash
+echo <YOUR_GITHUB_TOKEN> | docker login ghcr.io -u <YOUR_GITHUB_USERNAME> --password-stdin
 ```
 
 ### Windows PowerShell
