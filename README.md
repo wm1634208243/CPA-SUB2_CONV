@@ -4,6 +4,12 @@ A lightweight Go web app for converting account JSON between CPA (`codex`) and S
 
 Online demo: [conv.wangmin.xyz](https://conv.wangmin.xyz)
 
+## 致谢
+
+感谢真诚、友善、团结、专业的 [LinuxDo](https://linux.do) 社区，让我学到很多开发和AI相关的知识和玩法。
+
+[LinuxDo](https://linux.do) — 学 AI，上 L 站。
+
 ## Highlights
 
 - Convert `CPA -> Sub2API`
