@@ -1,70 +1,92 @@
-# CPA-SUB2_Conv
+# CPA-SUB2 Conv
 
-A lightweight Go web app for converting account JSON between CPA (`codex`) and Sub2API formats.
+> 一个轻量级 Go Web 工具，用于在 CPA (`codex`) 与 Sub2API 账号 JSON 格式之间相互转换。
 
-Online demo: [conv.wangmin.xyz](https://conv.wangmin.xyz)
+[在线体验](https://conv.wangmin.xyz) · [示例文件](./examples) · [Docker Compose](./docker-compose.yml)
 
-## 致谢
+## 目录
 
-感谢真诚、友善、团结、专业的 [LinuxDo](https://linux.do) 社区，让我学到很多开发和AI相关的知识和玩法。
+- [功能亮点](#功能亮点)
+- [快速开始](#快速开始)
+- [Docker 部署](#docker-部署)
+- [API](#api)
+- [示例文件](#示例文件)
+- [项目结构](#项目结构)
+- [开发](#开发)
+- [发布](#发布)
 
-[LinuxDo](https://linux.do) — 学 AI，上 L 站。
+## 功能亮点
 
-## Highlights
+| 功能 | 说明 |
+| --- | --- |
+| 双向转换 | 支持 `CPA -> Sub2API` 与 `Sub2API -> CPA` |
+| 自动识别 | `auto` 模式会自动判断输入格式并转换到另一种格式 |
+| 文本转换 | 可直接在浏览器中粘贴 JSON 并转换 |
+| 文件转换 | 支持上传单个 `.json` 文件并下载转换结果 |
+| 批量转换 | 支持上传 `.zip`，批量转换压缩包内所有 `.json` 文件 |
+| ZIP 输出 | 批量结果会打包为 `converted_<timestamp>.zip` |
 
-- Convert `CPA -> Sub2API`
-- Convert `Sub2API -> CPA`
-- Paste JSON directly in the browser
-- Upload a single `.json` file and download the converted result
-- Upload a `.zip` archive and batch-convert all `.json` files inside it
-- Download batch output as `converted_<timestamp>.zip`
-- Choose how converted JSON files are named:
-  - Timestamp
-  - Output format + original file name
-  - Output format + JSON `name`
-  - Custom prefix
+### 下载命名方式
 
-## Preview
+| 模式 | 说明 |
+| --- | --- |
+| 时间戳 | 使用当前时间生成文件名 |
+| 格式 + 原文件名 | 例如 `sub2_accounts.json` |
+| 格式 + JSON 名称 | 优先读取 JSON 中的 `name`、`email` 或 `account_id` |
+| 自定义前缀 | 使用自定义前缀生成下载文件名 |
 
-Add a screenshot here after your first GitHub push, for example:
+## 快速开始
 
-```md
-![App Screenshot](./docs/screenshot.png)
-```
+### 本地运行
 
-## Quick Start
-
-Build:
+需要 Go `1.22+`。
 
 ```bash
 go build -o converter_server .
-```
-
-Run:
-
-```bash
 ./converter_server
 ```
 
-Open [http://localhost:8080](http://localhost:8080).
+Windows PowerShell:
 
-## Docker Compose
+```powershell
+go build -o converter_server.exe .
+.\converter_server.exe
+```
 
-Direct pull and start:
+启动后访问 [http://localhost:8080](http://localhost:8080)。
+
+### 指定端口
+
+服务默认监听 `8080`，可以通过 `PORT` 环境变量覆盖。
+
+```bash
+PORT=9090 ./converter_server
+```
+
+Windows PowerShell:
+
+```powershell
+$env:PORT = "9090"
+.\converter_server.exe
+```
+
+## Docker 部署
+
+### 使用 Docker Compose
 
 ```bash
 docker compose up -d
 ```
 
-Open [http://localhost:8080](http://localhost:8080).
+启动后访问 [http://localhost:8080](http://localhost:8080)。
 
-Stop:
+停止服务：
 
 ```bash
 docker compose down
 ```
 
-Use a different host port:
+### 修改宿主机端口
 
 ```bash
 HOST_PORT=9090 docker compose up -d
@@ -73,74 +95,56 @@ HOST_PORT=9090 docker compose up -d
 Windows PowerShell:
 
 ```powershell
-$env:HOST_PORT="9090"
+$env:HOST_PORT = "9090"
 docker compose up -d
 ```
 
-The default Compose file pulls the published image from GitHub Container Registry:
+默认 Compose 文件会拉取 GitHub Container Registry 上的镜像：
 
 ```text
 ghcr.io/wm1634208243/cpa-sub2-conv:latest
 ```
 
-If you want to build locally from source instead, run:
+如果包仍是私有状态，需要先登录 `ghcr.io`：
+
+```bash
+echo <YOUR_GITHUB_TOKEN> | docker login ghcr.io -u <YOUR_GITHUB_USERNAME> --password-stdin
+```
+
+### 本地构建镜像
 
 ```bash
 docker build -t cpa-sub2-conv .
 docker run --rm -p 8080:8080 cpa-sub2-conv
 ```
 
-The repository also includes a GitHub Actions workflow at [docker-publish.yml](/D:/project/CPA-SUB2_CONV/.github/workflows/docker-publish.yml) that publishes the image automatically when code is pushed to the `main` branch or when a `v*` tag is pushed.
-After the first successful workflow run, users can clone the repo or just download the [docker-compose.yml](/D:/project/CPA-SUB2_CONV/docker-compose.yml) file and start the container directly.
-
-If the package is still private on GitHub, users must authenticate to `ghcr.io` before pulling:
-
-```bash
-echo <YOUR_GITHUB_TOKEN> | docker login ghcr.io -u <YOUR_GITHUB_USERNAME> --password-stdin
-```
-
-### Windows PowerShell
-
-If you want the Go build cache to stay inside the project directory:
-
-```powershell
-$env:GOCACHE="$PWD\.gocache"
-go build ./...
-go test ./...
-```
-
-## Features
-
-### Web UI
-
-- Browser-based JSON paste and convert flow
-- `.json` and `.zip` upload support
-- Download naming options for pasted JSON and uploaded JSON files
-- Batch ZIP output download
-
-### Format handling
-
-- Auto-detect source format in `auto` mode
-- Convert CPA account JSON to Sub2API export JSON
-- Convert Sub2API export JSON to CPA account JSON
-
 ## API
+
+| Method | Path | 说明 |
+| --- | --- | --- |
+| `POST` | `/api/detect` | 识别输入 JSON 格式 |
+| `POST` | `/api/convert` | 转换文本 JSON |
+| `POST` | `/api/convert-file` | 转换上传的 `.json` 或 `.zip` 文件 |
 
 ### `POST /api/detect`
 
 Request:
 
 ```json
-{ "input": "<json string>" }
+{
+  "input": "<json string>"
+}
 ```
 
 Response:
 
 ```json
-{ "format": "cpa" }
+{
+  "format": "cpa"
+}
 ```
 
-Possible values:
+`format` 可能的值：
 
 - `cpa`
 - `sub2`
@@ -157,36 +161,52 @@ Request:
 }
 ```
 
-Possible `target` values:
+`target` 可能的值：
 
 - `cpa`
 - `sub2`
 - `auto`
 
+Response:
+
+```json
+{
+  "output": "<converted json string>",
+  "detected": "cpa"
+}
+```
+
 ### `POST /api/convert-file`
 
 Multipart form fields:
 
-- `file`: `.json` or `.zip`
-- `target`: `cpa`, `sub2`, or `auto`
+| Field | 说明 |
+| --- | --- |
+| `file` | `.json` 或 `.zip` 文件 |
+| `target` | `cpa`、`sub2` 或 `auto` |
 
-Behavior:
+返回行为：
 
-- If the file is `.json`, the response is a downloadable converted JSON file
-- If the file is `.zip`, each `.json` entry is converted and returned as `converted_<timestamp>.zip`
+- 上传 `.json` 时，返回转换后的 JSON 文件。
+- 上传 `.zip` 时，转换压缩包内的所有 `.json` 文件，并返回 `converted_<timestamp>.zip`。
+- 上传文件大小限制为 `32MB`。
 
-## Example Files
+## 示例文件
 
-Sample input files are available in [`examples/`](D:/project/cpa-sub2-json-converter/examples):
+示例输入文件位于 [examples](./examples)：
 
-- [cpa.sample.json](D:/project/cpa-sub2-json-converter/examples/cpa.sample.json)
-- [sub2.sample.json](D:/project/cpa-sub2-json-converter/examples/sub2.sample.json)
+- [cpa.sample.json](./examples/cpa.sample.json)
+- [sub2.sample.json](./examples/sub2.sample.json)
 
-## Project Structure
+## 项目结构
 
 ```text
 .
 |-- main.go
+|-- go.mod
+|-- Dockerfile
+|-- docker-compose.yml
+|-- Makefile
 |-- static/
 |   |-- index.html
 |   `-- favicon.svg
@@ -195,34 +215,65 @@ Sample input files are available in [`examples/`](D:/project/cpa-sub2-json-conve
 |   `-- handler/
 |-- examples/
 |-- .github/
+|   `-- workflows/
 `-- README.md
 ```
 
-## Development
+## 开发
 
-Run tests:
+运行测试：
 
 ```bash
 go test ./...
 ```
 
-Build:
+构建项目：
 
 ```bash
 go build ./...
 ```
 
+如果本地安装了 `make`，也可以使用：
+
+```bash
+make build
+make run
+```
+
+Windows PowerShell 下如需将 Go 构建缓存放在项目目录内：
+
+```powershell
+$env:GOCACHE = "$PWD\.gocache"
+go build ./...
+go test ./...
+```
+
+## 发布
+
+仓库包含 GitHub Actions 工作流：
+
+- [ci.yml](./.github/workflows/ci.yml)：持续集成检查。
+- [docker-publish.yml](./.github/workflows/docker-publish.yml)：推送到 `main` 分支或推送 `v*` 标签时，自动构建并发布容器镜像。
+
+工作流首次成功运行后，用户可以克隆仓库，也可以只下载 [docker-compose.yml](./docker-compose.yml) 并直接启动容器。
+
 ## Roadmap
 
-- Partial-success ZIP conversion with a failure report
-- More robust input validation
-- Better per-file progress or status for batch conversion
-- Release packaging and versioned binaries
+- ZIP 批量转换支持部分成功，并生成失败报告。
+- 增强输入校验与错误提示。
+- 为批量转换提供更清晰的单文件进度或状态。
+- 补充版本化二进制发布包。
+
+## 致谢
+
+感谢真诚、友善、团结、专业的 [LinuxDo](https://linux.do) 社区，让我学到很多开发和 AI 相关的知识和玩法。
+
+[LinuxDo](https://linux.do) - 学 AI，上 L 站。
 
 ## Contributing
 
-See [CONTRIBUTING.md](D:/project/cpa-sub2-json-converter/CONTRIBUTING.md).
+欢迎提交 Issue 或 Pull Request。更多说明见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
 ## License
 
-Released under the [MIT License](D:/project/cpa-sub2-json-converter/LICENSE).
+Released under the [MIT License](./LICENSE).
